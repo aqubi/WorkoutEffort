@@ -89,7 +89,8 @@ struct WorkoutListView: View {
 
     private func requestAuthorization() async throws {
         let typeIds:[HKQuantityTypeIdentifier] = [.activeEnergyBurned, .basalEnergyBurned, .distanceWalkingRunning, .heartRate, .estimatedWorkoutEffortScore, .workoutEffortScore]
-        let types = typeIds.map { HKQuantityType($0)}
+        var types:[HKSampleType] = typeIds.map { HKQuantityType($0)}
+        types.append(.workoutType())
         try await healthStore.requestAuthorization(Set(types))
     }
 
