@@ -11,9 +11,9 @@ extension TimeInterval {
     var timeString: String {
         let formatter = DateComponentsFormatter()
         formatter.unitsStyle = .positional
-        formatter.allowedUnits = [.hour, .minute, .second]
+        formatter.allowedUnits = [.minute, .second]
         formatter.zeroFormattingBehavior = .pad
-        return formatter.string(from: self) ?? "00:00:00"
+        return formatter.string(from: self) ?? "00:00"
     }
 }
 

@@ -120,6 +120,8 @@ private struct TimeView: View {
 
             Text(elapsedTime.timeString)
                 .font(.system(size: 23))
+                .minimumScaleFactor(0.5)
+                .lineLimit(1)
                 .monospaced()
         }
     }
