@@ -20,7 +20,7 @@ import HealthKit
     private override init() {}
     
     func requestAuthorization() async throws {
-        let source = HKLiveWorkoutDataSource(healthStore: healthStore, workoutConfiguration: WorkoutBuilder.workoutConfiguration())
+        let source = HKLiveWorkoutDataSource(healthStore: healthStore, workoutConfiguration: WorkoutBuilder.walkingConfiguration())
         var types:Set<HKSampleType> = source.typesToCollect
         types.insert(.workoutType())
         try await healthStore.requestAuthorization(types)

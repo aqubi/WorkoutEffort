@@ -27,7 +27,7 @@ import HealthKit
     private var timer: Timer?
     private var endDate: Date?
 
-    static func workoutConfiguration() -> HKWorkoutConfiguration {
+    static func walkingConfiguration() -> HKWorkoutConfiguration {
         let config = HKWorkoutConfiguration()
         config.activityType = .walking
         config.locationType = .outdoor
@@ -40,7 +40,7 @@ import HealthKit
         self.status = .loading
         let date = Date()
 
-        let config = Self.workoutConfiguration()
+        let config = Self.walkingConfiguration()
         let session = try HKWorkoutSession(healthStore: healthStore, configuration: config)
         session.delegate = self
         self.session = session
@@ -70,11 +70,13 @@ import HealthKit
     }
 
     func stopWorkout(isDiscard: Bool) async throws {
-        guard let builder else { return }
+        guard let builder, let session else { return }
         self.status = .loading
         let endDate = Date()
         self.endDate = endDate
-        await stopWorkoutSession(endDate)
+
+        session.stopActivity(with: endDate)
+        await waitToStopSession(endDate)
         try await builder.endCollection(at: endDate)
 
         if isDiscard {
@@ -84,6 +86,7 @@ import HealthKit
         }
         finished()
         try? await Task.sleep(nanoseconds: 10 * 100_000_000) //1 sec
+        reloadAllStatisticsValue()
         self.status = .finished
     }
 
@@ -116,9 +119,8 @@ import HealthKit
         }
     }
 
-    private func stopWorkoutSession(_ date: Date) async {
+    private func waitToStopSession(_ date: Date) async {
         guard let session else { return }
-        session.stopActivity(with: date)
         if session.state == .stopped || session.state == .ended { return }
         let start = Date()
         var waitTime:Float = 5
@@ -139,6 +141,16 @@ import HealthKit
             self.elapsedTime = builder.elapsedTime(at: date)
         } else {
             self.elapsedTime = builder.elapsedTime
+        }
+    }
+
+    private func reloadAllStatisticsValue() {
+        guard let builder else { return }
+        for item in builder.allStatistics {
+            let quantityType = item.key
+            if let quantity = builder.currentQuantity(for: quantityType) {
+                self.typeValues[quantityType] = quantityType.valueString(quantity)
+            }
         }
     }
 }

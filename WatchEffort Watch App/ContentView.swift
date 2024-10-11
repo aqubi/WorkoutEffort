@@ -149,6 +149,7 @@ private struct TypeToCollectionView: View {
                         .font(.system(size: 11))
                         .minimumScaleFactor(0.5)
                 }
+                .lineLimit(1)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

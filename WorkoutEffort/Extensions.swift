@@ -27,7 +27,7 @@ extension HKQuantityType {
         case .heartRate: return "Heart Rate"
         case .estimatedWorkoutEffortScore: return "Estimated Workout Effort"
         case .workoutEffortScore: return "Workout Effort"
-        default: return "?"
+        default: return self.identifier
         }
     }
 }
@@ -39,12 +39,12 @@ extension HKQuantityType {
         case .activeEnergyBurned, .basalEnergyBurned:
             let unit = HKUnit.kilocalorie()
             let value = quantity.doubleValue(for: unit)
-            let fractionLength: Int = value >= 1 ? 2 : 3
+            let fractionLength: Int = value >= 1 ? 1 : 2
             return "\(value.formatted(.number.precision(.fractionLength(fractionLength)))) \(unit.unitString)"
         case .distanceWalkingRunning:
             let unit = HKUnit.meterUnit(with: .kilo)
             let value = quantity.doubleValue(for: unit)
-            let fractionLength: Int = value >= 1 ? 2 : 3
+            let fractionLength: Int = value >= 1 ? 1 : 2
             return "\(value.formatted(.number.precision(.fractionLength(fractionLength)))) \(unit.unitString)"
         case .heartRate:
             let value = quantity.doubleValue(for: .count().unitDivided(by: .minute()))
@@ -173,17 +173,5 @@ extension Text {
                     .stroke(content, lineWidth: 1)
             }
 
-    }
-}
-
-#Preview {
-    ZStack {
-        Color.blue.opacity(0.2)
-        VStack {
-            Text("Sample")
-                .captionEmphasis(.secondary)
-            Text("Sample")
-                .captionEmphasis2(.secondary)
-        }
     }
 }
