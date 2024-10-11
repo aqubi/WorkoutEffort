@@ -10,7 +10,7 @@ import HealthKit
 
 struct ContentView: View {
     @State var store = DataStore.shared
-    @State private var isSaveWorkout: Bool = false
+    @State private var isSaveWorkout: Bool = true
 
     enum ViewType {
         case workouts
